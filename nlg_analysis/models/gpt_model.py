@@ -2,4 +2,7 @@ from nlg_analysis.models.base_model import BaseModel
 
 
 class GPTModel(BaseModel):
-    pass
+    @staticmethod
+    def approach() -> str:
+        return "GPT_MODEL"
+
