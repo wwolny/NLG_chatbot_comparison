@@ -23,11 +23,17 @@ def main():
         config = yaml.safe_load(f)
     analysis_cfg = AnalysisConfig.from_dict(config)
 
+    # Load questions
+    logger.info("Loading questions...")
     df_ql = load_questions(analysis_cfg.question_file)
 
+    logger.info("Init models...")
     models = [RuleModel(), RNNModel(), BERTModel(), GPTModel()]
+
+    logger.info("Run conversations...")
     conversations = []
     for model in models:
+        logger.info("Run model {0}".format(model.approach()))
         for ql_id, questions in df_ql.iterrows():
             conversation = model.generate_transcript(questions.tolist())
             conversations.append({"ql_id": ql_id, "conversation": conversation, "model": model.approach()})

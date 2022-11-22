@@ -7,8 +7,18 @@ Run inside the repository directory:
 pip install -e .
 ```
 
-### Run analysis
-Run:
+### Train models
+Run training based on the setup in ```cfg/train_config.yaml```:
 ```commandline
-python nlg_analysis/nlg_analysis.py
+python nlg_train.py --config-file cfg/train_config.yaml 
 ```
+Check ```nlg_analysis/cfg/__init__.py``` for possible changes in config file
+like setting the output name for the trained model.
+
+### Run analysis
+Run analysis based on the setup in ```cfg/analysis_config.yaml```:
+```commandline
+python nlg_analysis.py --config-file cfg/analysis_config.yaml
+```
+Check ```nlg_analysis/cfg/__init__.py``` for possible changes in config file
+like setting the path to the trained model checkpoint.

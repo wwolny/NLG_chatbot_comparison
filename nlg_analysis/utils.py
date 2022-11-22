@@ -14,4 +14,5 @@ def save_conversations(filename: str, conversations: List[Dict]):
 
 def parse_arguments(args):
     parser = argparse.ArgumentParser()
+    parser.add_argument("--config-file", "-cf")
     return parser.parse_args(args)
