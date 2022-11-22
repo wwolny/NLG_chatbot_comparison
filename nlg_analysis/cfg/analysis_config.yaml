@@ -1,0 +1,4 @@
+question_file: 'question.csv'
+gpt_model_path: 'model_ckpt/gpt_.ckpt'
+bert_model_path: 'model_ckpt/bert_.ckpt'
+rnn_model_path: 'model_ckpt/bert_.ckpt'
