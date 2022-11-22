@@ -11,3 +11,5 @@ class RNNModel(BaseModel):
     def approach() -> str:
         return "RNN_MODEL"
 
+    def train(self, output_path):
+        pass

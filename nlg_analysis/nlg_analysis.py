@@ -23,13 +23,13 @@ def main():
         config = yaml.safe_load(f)
     analysis_cfg = AnalysisConfig.from_dict(config)
 
-    question_line = load_questions(analysis_cfg.question_file)
+    df_ql = load_questions(analysis_cfg.question_file)
 
     models = [RuleModel(), RNNModel(), BERTModel(), GPTModel()]
     conversations = []
     for model in models:
-        for ql_id, questions in enumerate(question_line):
-            conversation = model.generate_transcript(questions)
+        for ql_id, questions in df_ql.iterrows():
+            conversation = model.generate_transcript(questions.tolist())
             conversations.append({"ql_id": ql_id, "conversation": conversation, "model": model.approach()})
     save_conversations(analysis_cfg.output_file, conversations)
 

@@ -14,7 +14,7 @@ class BaseConfig:
 @dataclass
 class AnalysisConfig(BaseConfig):
     ts: str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    output_file: str = format(f'output/output_analysis_{0}.csv', ts)
+    output_file: str = f'output/output_analysis_{0}.csv'.format(ts)
     question_file: str = 'question.csv'
     gpt_model_path: str = 'model_ckpt/gpt_.ckpt'
     bert_model_path: str = 'model_ckpt/bert_.ckpt'
@@ -27,6 +27,6 @@ class TrainConfig(BaseConfig):
     rnn_model: bool = True
     bert_model: bool = True
     ts: str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    gpt_output_path: str = format(f"model_ckpt/gpt_{0}.ckpt", ts)
-    bert_output_path: str = format(f"model_ckpt/bert_{0}.ckpt", ts)
-    rnn_output_path: str = format(f"model_ckpt/rnn_{0}.ckpt", ts)
+    gpt_output_path: str = f"model_ckpt/gpt_{0}.ckpt".format(ts)
+    bert_output_path: str = f"model_ckpt/bert_{0}.ckpt".format(ts)
+    rnn_output_path: str = f"model_ckpt/rnn_{0}.ckpt".format(ts)

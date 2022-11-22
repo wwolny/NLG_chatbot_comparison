@@ -5,12 +5,11 @@ import pandas as pd
 
 
 def load_questions(filename: str):
-    return pd.read_csv(filename, sep=";", header=0, )
+    return pd.read_csv(filename, sep=";", header=0, quotechar="'")
 
 
 def save_conversations(filename: str, conversations: List[Dict]):
-    df_convs = pd.DataFrame(conversations)
-    df_convs.to_csv(filename)
+    pd.DataFrame(conversations).to_csv(filename)
 
 
 def parse_arguments(args):

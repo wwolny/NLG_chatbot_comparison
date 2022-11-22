@@ -11,3 +11,5 @@ class BERTModel(BaseModel):
     def approach() -> str:
         return "BERT_MODEL"
 
+    def train(self, output_path):
+        pass
