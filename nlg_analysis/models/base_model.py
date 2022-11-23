@@ -6,5 +6,5 @@ class BaseModel:
     def approach() -> str:
         raise NotImplementedError
 
-    def generate_transcript(self, questions: List):
+    def generate_transcript(self, questions: List) -> str:
         raise NotImplementedError

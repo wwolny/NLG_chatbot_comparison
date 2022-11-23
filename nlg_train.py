@@ -36,7 +36,7 @@ def main():
     # Train models
     for model in models:
         logger.info("Train model {0}".format(model["model"].approach()))
-        model["model"].train(model["output_path"])
+        model["model"].train(model["output_path"], train_cfg.train_ds_path, train_cfg.test_ds_path)
 
 
 if __name__ == "__main__":

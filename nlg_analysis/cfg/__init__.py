@@ -30,3 +30,6 @@ class TrainConfig(BaseConfig):
     gpt_output_path: str = "model_ckpt/gpt_{0}.ckpt".format(ts)
     bert_output_path: str = "model_ckpt/bert_{0}.ckpt".format(ts)
     rnn_output_path: str = "model_ckpt/rnn_{0}.ckpt".format(ts)
+    train_ds_path: str = "data/datasets/train"
+    test_ds_path: str = "data/datasets/test"
+

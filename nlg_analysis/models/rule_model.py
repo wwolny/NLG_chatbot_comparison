@@ -4,7 +4,7 @@ from nlg_analysis.models.base_model import BaseModel
 
 
 class RuleModel(BaseModel):
-    def generate_transcript(self, questions: List):
+    def generate_transcript(self, questions: List) -> str:
         pass
 
     @staticmethod
