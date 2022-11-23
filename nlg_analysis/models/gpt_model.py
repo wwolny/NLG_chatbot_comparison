@@ -3,6 +3,7 @@ from typing import List
 from transformers import pipeline, Trainer, TrainingArguments, AutoModelWithLMHead, TextDataset, \
     DataCollatorForLanguageModeling, AutoTokenizer
 
+from nlg_analysis.cfg import TrainConfig
 from nlg_analysis.models.base_model import BaseModel
 
 
@@ -41,13 +42,11 @@ class GPTModel(BaseModel):
     def approach() -> str:
         return "GPT_MODEL"
 
-    def train(
-            self,
-            output_path: str,
-            train_path: str,
-            test_path: str,
-    ):
-        train_dataset, test_dataset, data_collator = self.load_dataset(train_path, test_path)
+    def train(self, output_path: str, train_config: TrainConfig):
+        train_dataset, test_dataset, data_collator = self.load_dataset(
+            train_config.train_ds_path,
+            train_config.test_ds_path
+        )
 
         training_args = TrainingArguments(
             output_dir=output_path,

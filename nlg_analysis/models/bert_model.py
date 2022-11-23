@@ -1,5 +1,6 @@
 from typing import List
 
+from nlg_analysis.cfg import TrainConfig
 from nlg_analysis.models.base_model import BaseModel
 
 
@@ -11,10 +12,5 @@ class BERTModel(BaseModel):
     def approach() -> str:
         return "BERT_MODEL"
 
-    def train(
-            self,
-            output_path: str,
-            train_path: str,
-            test_path: str,
-    ):
+    def train(self, output_path: str, train_config: TrainConfig):
         pass
