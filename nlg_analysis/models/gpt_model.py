@@ -45,7 +45,8 @@ class GPTModel(BaseModel):
     def train(self, output_path: str, train_config: TrainConfig):
         train_dataset, test_dataset, data_collator = self.load_dataset(
             train_config.train_ds_path,
-            train_config.test_ds_path
+            train_config.test_ds_path,
+            block_size= train_config.block_size,
         )
 
         training_args = TrainingArguments(
@@ -70,16 +71,16 @@ class GPTModel(BaseModel):
         )
         trainer.train()
 
-    def load_dataset(self, train_path: str, test_path: str):
+    def load_dataset(self, train_path: str, test_path: str, block_size: int = 64):
         train_dataset = TextDataset(
             tokenizer=self.tokenizer,
             file_path=train_path,
-            block_size=64)
+            block_size=block_size)
 
         test_dataset = TextDataset(
             tokenizer=self.tokenizer,
             file_path=test_path,
-            block_size=64)
+            block_size=block_size)
 
         data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokenizer, mlm=False,
