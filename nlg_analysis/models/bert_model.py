@@ -14,15 +14,20 @@ class BERTModel(BaseModel):
             self,
             path2model: str = None,
             model_name: str = "dkleczek/bert-base-polish-uncased-v1",
+            num_labels: int = 88,
+            encoder_max_length: int = 64,
     ):
+        self.encoder_max_length = encoder_max_length
         if path2model is not None:
             self.model = BertForSequenceClassification.from_pretrained(path2model)
-        else:
-            self.tokenizer = BertTokenizer.from_pretrained(model_name)
-            self.model = BertForSequenceClassification.from_pretrained(model_name, num_labels=88)
-            self.encoder_max_length = 64
             self.lab_key = pd.read_csv("data/label-key.txt", sep=";")
             self.lab_key = self.lab_key.set_index("label").to_dict()
+        else:
+            self.tokenizer = BertTokenizer.from_pretrained(model_name)
+            self.model = BertForSequenceClassification.from_pretrained(
+                model_name,
+                num_labels=num_labels
+            )
 
     def generate_transcript(self, questions: List) -> str:
         full_txt = ""
@@ -38,21 +43,28 @@ class BERTModel(BaseModel):
         return "BERT_MODEL"
 
     def train(self, output_path: str, train_config: TrainConfig):
-        dataset_train = datasets.load_dataset('csv', data_files=train_config.train_ds_path, split=datasets.Split.TRAIN)
-        dataset_val = datasets.load_dataset('csv', data_files=train_config.test_ds_path, split=datasets.Split.TRAIN)
-        batch_size = 4
+        dataset_train = datasets.load_dataset(
+            'csv',
+            data_files=train_config.train_ds_path,
+            split=datasets.Split.TRAIN
+        )
+        dataset_val = datasets.load_dataset(
+            'csv',
+            data_files=train_config.test_ds_path,
+            split=datasets.Split.TRAIN
+        )
 
         train_data = dataset_train.map(
             self.process_data_to_model_inputs,
             batched=True,
-            batch_size=batch_size,
+            batch_size=train_config.train_batch_size,
             remove_columns=["input", "label", "Unnamed: 0"]
         )
 
         eval_data = dataset_val.map(
             self.process_data_to_model_inputs,
             batched=True,
-            batch_size=batch_size,
+            batch_size=train_config.eval_batch_size,
             remove_columns=["input", "label", "Unnamed: 0"]
         )
 
@@ -61,15 +73,15 @@ class BERTModel(BaseModel):
         )
 
         training_args = TrainingArguments(
-            num_train_epochs=10,
-            per_device_train_batch_size=16,
-            weight_decay=0.01,
-            load_best_model_at_end=True,
-            logging_steps=200,
+            num_train_epochs=train_config.epochs,
+            per_device_train_batch_size=train_config.train_batch_size,
+            weight_decay=train_config.weight_decay,
+            load_best_model_at_end=train_config.bert_load_best_model,
+            logging_steps=train_config.logging_steps,
             evaluation_strategy="steps",
             output_dir=output_path,
-            eval_steps=400,
-            save_steps=1000,
+            eval_steps=train_config.eval_step,
+            save_steps=train_config.save_steps,
         )
         trainer = Trainer(model=self.model,
                           args=training_args,
@@ -89,7 +101,7 @@ class BERTModel(BaseModel):
         batch["labels"] = batch["label"]
         return batch
 
-    def get_prediction(self, text):
+    def get_prediction(self, text: str):
         inputs = self.tokenizer(
             text,
             padding=True,
