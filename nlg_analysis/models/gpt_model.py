@@ -11,7 +11,7 @@ class GPTModel(BaseModel):
     def __init__(
             self,
             path2model: str = None,
-            gpt_model: str = "flax-community/papuGaPT2",
+            model_name: str = "flax-community/papuGaPT2",
     ):
         if path2model is not None:
             config_path: str = path2model + "config.json"
@@ -19,14 +19,14 @@ class GPTModel(BaseModel):
                 self.model = pipeline(
                     'text-generation',
                     model=path2model,
-                    tokenizer=gpt_model,
+                    tokenizer=model_name,
                     config=config_path
                 )
             else:
                 raise FileNotFoundError
         else:
-            self.model = AutoModelWithLMHead.from_pretrained(gpt_model)
-            self.tokenizer = AutoTokenizer.from_pretrained(gpt_model)
+            self.model = AutoModelWithLMHead.from_pretrained(model_name)
+            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     def generate_transcript(self, questions: List) -> str:
         output_txt = ""
@@ -46,7 +46,7 @@ class GPTModel(BaseModel):
         train_dataset, test_dataset, data_collator = self.load_dataset(
             train_config.train_ds_path,
             train_config.test_ds_path,
-            block_size= train_config.block_size,
+            block_size=train_config.block_size,
         )
 
         training_args = TrainingArguments(
