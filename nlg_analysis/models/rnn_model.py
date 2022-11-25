@@ -68,12 +68,8 @@ class RNNModel(BaseModel):
         text = open(train_config.train_ds_path, 'rb').read().decode(encoding='utf-8')
         all_ids = self.ids_from_chars(tf.strings.unicode_split(text, 'UTF-8'))
         ids_dataset = tf.data.Dataset.from_tensor_slices(all_ids)
-        seq_length = 100
-        sequences = ids_dataset.batch(seq_length + 1, drop_remainder=True)
+        sequences = ids_dataset.batch(train_config.seq_length + 1, drop_remainder=True)
         dataset = sequences.map(self.split_input_target)
-        BUFFER_SIZE = 64
-        BATCH_SIZE = 10000
-        EPOCHS = 100
 
         checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=output_path,
@@ -81,10 +77,10 @@ class RNNModel(BaseModel):
 
         dataset = (
             dataset
-            .shuffle(BUFFER_SIZE)
-            .batch(BATCH_SIZE, drop_remainder=True)
+            .shuffle(train_config.buffer_size)
+            .batch(train_config.batch_size, drop_remainder=True)
             .prefetch(tf.data.experimental.AUTOTUNE))
-        self.model.fit(dataset, epochs=EPOCHS, callbacks=[checkpoint_callback])
+        self.model.fit(dataset, epochs=train_config.epochs, callbacks=[checkpoint_callback])
 
     @staticmethod
     def split_input_target(sequence):

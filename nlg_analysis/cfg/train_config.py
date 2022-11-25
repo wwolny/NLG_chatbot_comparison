@@ -10,7 +10,7 @@ class TrainConfig(BaseConfig):
     rnn_model: bool = True
     bert_model: bool = True
 
-    # Mdels paths
+    # Models paths
     ts: str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     gpt_output_path: str = "model_ckpt/gpt_{0}.ckpt".format(ts)
     bert_output_path: str = "model_ckpt/bert_{0}.ckpt".format(ts)
@@ -35,3 +35,8 @@ class TrainConfig(BaseConfig):
     weight_decay: float = 0.01
     bert_load_best_model: bool = True
     logging_steps: int = 200
+
+    # RNN parameters
+    seq_length: int = 100
+    buffer_size = 64
+    batch_size = 10000
