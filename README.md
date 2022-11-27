@@ -22,3 +22,10 @@ python nlg_analysis.py --config-file cfg/analysis_config.yaml
 ```
 Check ```nlg_analysis/cfg/__init__.py``` for possible changes in config file
 like setting the path to the trained model checkpoint.
+
+### Code maintenance
+There is Black, iSort, Flake8 and pre-commit set up. After installation run:
+```commandline
+pre-commit install
+```
+Before committing any changes.
