@@ -16,6 +16,8 @@ from nlg_analysis.models.base_model import BaseModel
 
 
 class GPTModel(BaseModel):
+    """Fine tuned GPT-2 model."""
+
     def __init__(
         self,
         path2model: str = None,
@@ -37,6 +39,7 @@ class GPTModel(BaseModel):
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     def generate_transcript(self, questions: List) -> str:
+        """Generate conversation transcript."""
         output_txt = ""
         for q in questions:
             full_quest = "<q> " + q + "\n<a>"
@@ -50,9 +53,11 @@ class GPTModel(BaseModel):
 
     @staticmethod
     def approach() -> str:
+        """Return the name of implemented approach."""
         return "GPT_MODEL"
 
     def train(self, output_path: str, train_config: TrainConfig):
+        """Train model and save to given output path."""
         train_dataset, test_dataset, data_collator = self.load_dataset(
             train_config.train_ds_path,
             train_config.test_ds_path,
@@ -84,6 +89,7 @@ class GPTModel(BaseModel):
     def load_dataset(
         self, train_path: str, test_path: str, block_size: int = 64
     ):
+        """Load dataset from given datasets paths."""
         train_dataset = TextDataset(
             tokenizer=self.tokenizer,
             file_path=train_path,
