@@ -1,7 +1,15 @@
 import pathlib
 from typing import List
-from transformers import pipeline, Trainer, TrainingArguments, AutoModelWithLMHead, TextDataset, \
-    DataCollatorForLanguageModeling, AutoTokenizer
+
+from transformers import (
+    AutoModelWithLMHead,
+    AutoTokenizer,
+    DataCollatorForLanguageModeling,
+    TextDataset,
+    Trainer,
+    TrainingArguments,
+    pipeline,
+)
 
 from nlg_analysis.cfg import TrainConfig
 from nlg_analysis.models.base_model import BaseModel
@@ -9,18 +17,18 @@ from nlg_analysis.models.base_model import BaseModel
 
 class GPTModel(BaseModel):
     def __init__(
-            self,
-            path2model: str = None,
-            model_name: str = "flax-community/papuGaPT2",
+        self,
+        path2model: str = None,
+        model_name: str = "flax-community/papuGaPT2",
     ):
         if path2model is not None:
             config_path: str = path2model + "config.json"
             if pathlib.Path(config_path).exists():
                 self.model = pipeline(
-                    'text-generation',
+                    "text-generation",
                     model=path2model,
                     tokenizer=model_name,
-                    config=config_path
+                    config=config_path,
                 )
             else:
                 raise FileNotFoundError
@@ -32,8 +40,10 @@ class GPTModel(BaseModel):
         output_txt = ""
         for q in questions:
             full_quest = "<q> " + q + "\n<a>"
-            answers = self.model(full_quest, max_length=40)[0]["generated_text"]
-            answers = answers[len(full_quest):]
+            answers = self.model(full_quest, max_length=40)[0][
+                "generated_text"
+            ]
+            answers = answers[len(full_quest) :]
             answers = answers.split("\n")[0]
             output_txt += q + "\n" + answers.strip() + "\n"
         return output_txt
@@ -71,18 +81,23 @@ class GPTModel(BaseModel):
         )
         trainer.train()
 
-    def load_dataset(self, train_path: str, test_path: str, block_size: int = 64):
+    def load_dataset(
+        self, train_path: str, test_path: str, block_size: int = 64
+    ):
         train_dataset = TextDataset(
             tokenizer=self.tokenizer,
             file_path=train_path,
-            block_size=block_size)
+            block_size=block_size,
+        )
 
         test_dataset = TextDataset(
             tokenizer=self.tokenizer,
             file_path=test_path,
-            block_size=block_size)
+            block_size=block_size,
+        )
 
         data_collator = DataCollatorForLanguageModeling(
-            tokenizer=self.tokenizer, mlm=False,
+            tokenizer=self.tokenizer,
+            mlm=False,
         )
         return train_dataset, test_dataset, data_collator

@@ -1,15 +1,20 @@
+import logging
 import os
 import sys
+
 import yaml
-import logging
 
 from nlg_analysis.cfg import AnalysisConfig
-from nlg_analysis.models import RuleModel, RNNModel, BERTModel, GPTModel
-from nlg_analysis.utils import parse_arguments, load_questions, save_conversations
+from nlg_analysis.models import BERTModel, GPTModel, RNNModel, RuleModel
+from nlg_analysis.utils import (
+    load_questions,
+    parse_arguments,
+    save_conversations,
+)
 
 logger = logging.getLogger()
 logging.basicConfig(
-    format='%(asctime)s : %(levelname)s : %(message)s',
+    format="%(asctime)s : %(levelname)s : %(message)s",
     level=os.environ.get("LOGLEVEL", "INFO"),
 )
 
@@ -36,7 +41,13 @@ def main():
         logger.info("Run model {0}".format(model.approach()))
         for ql_id, questions in df_ql.iterrows():
             conversation = model.generate_transcript(questions.tolist())
-            conversations.append({"ql_id": ql_id, "conversation": conversation, "model": model.approach()})
+            conversations.append(
+                {
+                    "ql_id": ql_id,
+                    "conversation": conversation,
+                    "model": model.approach(),
+                }
+            )
     save_conversations(analysis_cfg.output_file, conversations)
 
 

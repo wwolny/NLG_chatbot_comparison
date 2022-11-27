@@ -1,15 +1,16 @@
+import logging
 import os
 import sys
+
 import yaml
-import logging
 
 from nlg_analysis.cfg import TrainConfig
-from nlg_analysis.models import GPTModel, RNNModel, BERTModel
+from nlg_analysis.models import BERTModel, GPTModel, RNNModel
 from nlg_analysis.utils import parse_arguments
 
 logger = logging.getLogger()
 logging.basicConfig(
-    format='%(asctime)s : %(levelname)s : %(message)s',
+    format="%(asctime)s : %(levelname)s : %(message)s",
     level=os.environ.get("LOGLEVEL", "INFO"),
 )
 
@@ -26,18 +27,28 @@ def main():
     # Setup models
     models = []
     if train_cfg.gpt_model:
-        models.append({
-            "model": GPTModel(model_name=train_cfg.gpt_model_name),
-            "output_path": train_cfg.gpt_output_path
-        })
+        models.append(
+            {
+                "model": GPTModel(model_name=train_cfg.gpt_model_name),
+                "output_path": train_cfg.gpt_output_path,
+            }
+        )
     if train_cfg.rnn_model:
-        models.append({"model": RNNModel(), "output_path": train_cfg.rnn_output_path})
+        models.append(
+            {"model": RNNModel(), "output_path": train_cfg.rnn_output_path}
+        )
     if train_cfg.bert_model:
-        models.append({
-            "model": BERTModel(model_name=train_cfg.bert_model_name),
-            "output_path": train_cfg.bert_output_path
-        })
-    logger.info("Train models: {0}".format(", ".join([model["model"].approach() for model in models])))
+        models.append(
+            {
+                "model": BERTModel(model_name=train_cfg.bert_model_name),
+                "output_path": train_cfg.bert_output_path,
+            }
+        )
+    logger.info(
+        "Train models: {0}".format(
+            ", ".join([model["model"].approach() for model in models])
+        )
+    )
 
     # Train models
     for model in models:
