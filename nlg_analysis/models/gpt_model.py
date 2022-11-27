@@ -52,14 +52,14 @@ class GPTModel(BaseModel):
         training_args = TrainingArguments(
             output_dir=output_path,
             overwrite_output_dir=True,
-            num_train_epochs=25,
-            per_device_train_batch_size=16,
-            per_device_eval_batch_size=16,
-            eval_steps=1000,
-            save_total_limit=3,
-            save_steps=10000,
-            warmup_steps=600,
-            prediction_loss_only=True,
+            num_train_epochs=train_config.epochs,
+            per_device_train_batch_size=train_config.train_batch_size,
+            per_device_eval_batch_size=train_config.eval_batch_size,
+            eval_steps=train_config.eval_step,
+            save_total_limit=train_config.save_total_limit,
+            save_steps=train_config.save_steps,
+            warmup_steps=train_config.warmup_steps,
+            prediction_loss_only=train_config.predictions_loss_only,
         )
 
         trainer = Trainer(

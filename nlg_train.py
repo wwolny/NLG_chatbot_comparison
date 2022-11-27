@@ -26,11 +26,17 @@ def main():
     # Setup models
     models = []
     if train_cfg.gpt_model:
-        models.append({"model": GPTModel(), "output_path": train_cfg.gpt_output_path})
+        models.append({
+            "model": GPTModel(model_name=train_cfg.gpt_model_name),
+            "output_path": train_cfg.gpt_output_path
+        })
     if train_cfg.rnn_model:
         models.append({"model": RNNModel(), "output_path": train_cfg.rnn_output_path})
     if train_cfg.bert_model:
-        models.append({"model": BERTModel(), "output_path": train_cfg.bert_output_path})
+        models.append({
+            "model": BERTModel(model_name=train_cfg.bert_model_name),
+            "output_path": train_cfg.bert_output_path
+        })
     logger.info("Train models: {0}".format(", ".join([model["model"].approach() for model in models])))
 
     # Train models

@@ -6,17 +6,22 @@ from nlg_analysis.cfg.base_config import BaseConfig
 
 @dataclass
 class TrainConfig(BaseConfig):
+    # Dataset paths
+    train_ds_path: str = "data/datasets/"
+    test_ds_path: str = "data/datasets/"
+
+    # Run models
     gpt_model: bool = True
     rnn_model: bool = True
     bert_model: bool = True
 
-    # Models paths
+    # Models information
+    gpt_model_name: str = "flax-community/papuGaPT2"
+    bert_model_name: str = "dkleczek/bert-base-polish-uncased-v1"
     ts: str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     gpt_output_path: str = "model_ckpt/gpt_{0}.ckpt".format(ts)
     bert_output_path: str = "model_ckpt/bert_{0}.ckpt".format(ts)
     rnn_output_path: str = "model_ckpt/rnn_{0}.ckpt".format(ts)
-    train_ds_path: str = "data/datasets/train"
-    test_ds_path: str = "data/datasets/test"
 
     # Common training parameters
     train_batch_size: int = 16
