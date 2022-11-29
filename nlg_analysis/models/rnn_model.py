@@ -11,6 +11,8 @@ from nlg_analysis.models.one_step_model import OneStepModel
 
 
 class RNNModel(BaseModel):
+    """Model with recurrent neural networks."""
+
     def __init__(
         self,
         path2model: str = None,
@@ -45,6 +47,7 @@ class RNNModel(BaseModel):
             )
 
     def generate_transcript(self, questions: List) -> str:
+        """Generate conversation transcript."""
         trans_txt = ""
         states = None
         for q in questions:
@@ -65,9 +68,11 @@ class RNNModel(BaseModel):
 
     @staticmethod
     def approach() -> str:
+        """Return the name of implemented approach."""
         return "RNN_MODEL"
 
     def train(self, output_path: str, train_config: TrainConfig):
+        """Train model and save to given output path."""
         text = (
             open(train_config.train_ds_path, "rb")
             .read()
@@ -97,6 +102,7 @@ class RNNModel(BaseModel):
 
     @staticmethod
     def split_input_target(sequence):
+        """Split input sequence into text and target."""
         input_text = sequence[:-1]
         target_text = sequence[1:]
         return input_text, target_text

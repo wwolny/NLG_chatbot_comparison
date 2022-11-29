@@ -6,6 +6,8 @@ from nlg_analysis.cfg.base_config import BaseConfig
 
 @dataclass
 class AnalysisConfig(BaseConfig):
+    """Dataclass for the analysis script."""
+
     ts: str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     output_file: str = "output/output_analysis_{0}.csv".format(ts)
     question_file: str = "question.csv"

@@ -6,6 +6,8 @@ from nlg_analysis.cfg.base_config import BaseConfig
 
 @dataclass
 class TrainConfig(BaseConfig):
+    """Dataclass for the training script."""
+
     # Dataset paths
     train_ds_path: str = "data/datasets/"
     test_ds_path: str = "data/datasets/"

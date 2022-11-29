@@ -14,6 +14,8 @@ from nlg_analysis.models.base_model import BaseModel
 
 
 class BERTModel(BaseModel):
+    """Fine tuned BERT classifier."""
+
     def __init__(
         self,
         path2model: str = None,
@@ -35,6 +37,7 @@ class BERTModel(BaseModel):
             )
 
     def generate_transcript(self, questions: List) -> str:
+        """Generate conversation transcript."""
         full_txt = ""
         for q in questions:
             pred_q = self.get_prediction(q)
@@ -45,9 +48,11 @@ class BERTModel(BaseModel):
 
     @staticmethod
     def approach() -> str:
+        """Return the name of implemented approach."""
         return "BERT_MODEL"
 
     def train(self, output_path: str, train_config: TrainConfig):
+        """Train model and save to given output path."""
         dataset_train = datasets.load_dataset(
             "csv",
             data_files=train_config.train_ds_path,
@@ -99,6 +104,7 @@ class BERTModel(BaseModel):
         trainer.train()
 
     def process_data_to_model_inputs(self, batch):
+        """Fix batch format."""
         inputs = self.tokenizer(
             batch["input"],
             padding="max_length",
@@ -112,6 +118,7 @@ class BERTModel(BaseModel):
         return batch
 
     def get_prediction(self, text: str):
+        """Predict and return answer to a query."""
         inputs = self.tokenizer(
             text,
             padding=True,
