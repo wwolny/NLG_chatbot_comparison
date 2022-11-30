@@ -33,7 +33,12 @@ def main():
     df_ql = load_questions(analysis_cfg.question_file)
 
     logger.info("Init models...")
-    models = [RuleModel(), RNNModel(), BERTModel(), GPTModel()]
+    models = [
+        RuleModel(analysis_cfg.rule_model_path, analysis_cfg.spacy_model),
+        RNNModel(),
+        BERTModel(),
+        GPTModel(),
+    ]
 
     logger.info("Run conversations...")
     conversations = []

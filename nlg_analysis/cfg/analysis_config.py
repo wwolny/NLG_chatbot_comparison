@@ -14,3 +14,6 @@ class AnalysisConfig(BaseConfig):
     gpt_model_path: str = "model_ckpt/gpt_.ckpt"
     bert_model_path: str = "model_ckpt/bert_.ckpt"
     rnn_model_path: str = "model_ckpt/rnn_.ckpt"
+
+    rule_model_path: str = "data/example_rule_model_script.json"
+    spacy_model: str = "pl_core_news_lg"

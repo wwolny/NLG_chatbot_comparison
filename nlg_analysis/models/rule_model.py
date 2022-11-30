@@ -13,7 +13,9 @@ class RuleModel(BaseModel):
     """Rule based model."""
 
     def __init__(
-        self, path2script: str = "data/example_rule_model_script.json"
+        self,
+        path2script: str = "data/example_rule_model_script.json",
+        spacy_model: str = "pl_core_news_lg",
     ):
         self.memstack = []
         self.substitutions = {}
@@ -24,7 +26,7 @@ class RuleModel(BaseModel):
         except FileNotFoundError:
             print(f"File {path2script} not found.")
             self.script = {}
-        self.lang_model = spacy.load("pl_core_news_lg")
+        self.lang_model = spacy.load(spacy_model)
 
     def generate_transcript(self, questions: List) -> str:
         """Generate conversation transcript."""
