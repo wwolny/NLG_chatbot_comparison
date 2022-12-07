@@ -3,7 +3,7 @@ from dataclasses import dataclass, fields
 
 @dataclass
 class BaseConfig:
-    """Example dataclass."""
+    """Template dataclass with values reading method."""
 
     @classmethod
     def from_dict(cls, obj: dict):
