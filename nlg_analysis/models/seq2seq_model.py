@@ -21,7 +21,7 @@ class Seq2SeqModel(BaseModel):
 
     @staticmethod
     def approach() -> str:
-        return "GRU"
+        return "Seq2Seq"
 
     def train(
         self,
