@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Tuple
 
 import torch
 from torch import nn, optim
@@ -22,7 +22,7 @@ class Seq2SeqModel(BaseModel):
         answers_path: str,
         path2encoder: str = None,
         path2decoder: str = None,
-    ):
+    ) -> None:
         super(Seq2SeqModel, self).__init__()
         self.sos_token = 0
         self.eos_token = 1
@@ -75,7 +75,7 @@ class Seq2SeqModel(BaseModel):
         self,
         encoder_output_path: str,
         decoder_output_path: str,
-    ):
+    ) -> None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         learning_rate = 0.01
         hidden_size = 256
@@ -137,7 +137,7 @@ class Seq2SeqModel(BaseModel):
         device: torch.device,
         max_length=32,
         teacher_forcing_ratio=0.5,
-    ):
+    ) -> float:
         encoder_hidden = encoder.initHidden()
 
         encoder_optimizer.zero_grad()
@@ -207,7 +207,7 @@ class Seq2SeqModel(BaseModel):
         answer_side: ConversationSide,
         device: torch.device,
         max_length=32,
-    ):
+    ) -> Tuple[List[str], torch.Tensor]:
         with torch.no_grad():
             input_tensor = tensorFromSentence(
                 question_side,

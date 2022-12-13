@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -11,7 +13,7 @@ class Seq2SeqDecoder(nn.Module):
         device: torch.device,
         dropout_p: float = 0.1,
         max_length: int = 32,
-    ):
+    ) -> None:
         super(Seq2SeqDecoder, self).__init__()
         self.hidden_size = hidden_size
         self.output_size = output_size
@@ -26,12 +28,12 @@ class Seq2SeqDecoder(nn.Module):
         self.gru = nn.GRU(self.hidden_size, self.hidden_size)
         self.out = nn.Linear(self.hidden_size, self.output_size)
 
-    def set_hidden_size(self, size: int):
+    def set_hidden_size(self, size: int) -> None:
         self.hidden_size = size
 
     def forward(
         self, x: str, hidden: torch.Tensor, encoder_outputs: torch.Tensor
-    ):
+    ) -> Tuple[torch.Tensor, int, torch.Tensor]:
         embedded = self.embedding(x).view(1, 1, -1)
         embedded = self.dropout(embedded)
 
@@ -51,5 +53,5 @@ class Seq2SeqDecoder(nn.Module):
         output = F.log_softmax(self.out(output[0]), dim=1)
         return output, hidden, attn_weights
 
-    def initHidden(self):
+    def initHidden(self) -> torch.Tensor:
         return torch.zeros(1, 1, self.hidden_size, device=self.device)
