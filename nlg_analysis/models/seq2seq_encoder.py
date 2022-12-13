@@ -3,7 +3,9 @@ from torch import nn
 
 
 class Seq2SeqEncoder(nn.Module):
-    def __init__(self, input_size, hidden_size, device):
+    def __init__(
+        self, input_size: int, hidden_size: int, device: torch.device
+    ):
         super(Seq2SeqEncoder, self).__init__()
         self.hidden_size = hidden_size
 
@@ -11,10 +13,10 @@ class Seq2SeqEncoder(nn.Module):
         self.gru = nn.GRU(hidden_size, hidden_size)
         self.device = device
 
-    def set_hidden_size(self, size):
+    def set_hidden_size(self, size: int):
         self.hidden_size = size
 
-    def forward(self, x, hidden):
+    def forward(self, x, hidden: int):
         embedded = self.embedding(x).view(1, 1, -1)
         output = embedded
         output, hidden = self.gru(output, hidden)

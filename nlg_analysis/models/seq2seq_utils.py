@@ -1,13 +1,14 @@
 import random
 import re
 import unicodedata
+from typing import List
 
 import torch
 
 from nlg_analysis.models.conversation_side import ConversationSide
 
 
-def unicodeToAscii(s):
+def unicodeToAscii(s: str):
     return "".join(
         c
         for c in unicodedata.normalize("NFD", s)
@@ -15,7 +16,7 @@ def unicodeToAscii(s):
     )
 
 
-def normalizeString(s):
+def normalizeString(s: str):
     s = unicodeToAscii(s.lower().strip())
     s = re.sub(r"([.!?])", r" \1", s)
     s = re.sub(r"[^a-zA-ZęóąśłżźćńĘÓĄŁŻŹĆŃ.!?]+", r" ", s)
@@ -39,7 +40,7 @@ def readConvSides(questions_path: str, answers_path: str):
     return input_side, output_side, pairs
 
 
-def indexesFromSentence(conv_side, sentence):
+def indexesFromSentence(conv_side: ConversationSide, sentence: str):
     return [
         conv_side.word2index[word]
         for word in sentence.split(" ")
@@ -47,13 +48,24 @@ def indexesFromSentence(conv_side, sentence):
     ]
 
 
-def tensorFromSentence(conv_side, sentence, eos_token, device):
+def tensorFromSentence(
+    conv_side: ConversationSide,
+    sentence: str,
+    eos_token: int,
+    device: torch.device,
+):
     indexes = indexesFromSentence(conv_side, sentence)
     indexes.append(eos_token)
     return torch.tensor(indexes, dtype=torch.long, device=device).view(-1, 1)
 
 
-def tensorsFromPair(pair, input_side, output_side, eos_token, device):
+def tensorsFromPair(
+    pair: List,
+    input_side: ConversationSide,
+    output_side: ConversationSide,
+    eos_token: int,
+    device: torch.device,
+):
     input_tensor = tensorFromSentence(input_side, pair[0], eos_token, device)
     target_tensor = tensorFromSentence(output_side, pair[1], eos_token, device)
     return input_tensor, target_tensor

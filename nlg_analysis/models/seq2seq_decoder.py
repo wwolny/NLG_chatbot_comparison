@@ -5,7 +5,12 @@ from torch import nn
 
 class Seq2SeqDecoder(nn.Module):
     def __init__(
-        self, hidden_size, output_size, device, dropout_p=0.1, max_length=32
+        self,
+        hidden_size: int,
+        output_size: int,
+        device: torch.device,
+        dropout_p: float = 0.1,
+        max_length: int = 32,
     ):
         super(Seq2SeqDecoder, self).__init__()
         self.hidden_size = hidden_size
@@ -21,10 +26,12 @@ class Seq2SeqDecoder(nn.Module):
         self.gru = nn.GRU(self.hidden_size, self.hidden_size)
         self.out = nn.Linear(self.hidden_size, self.output_size)
 
-    def set_hidden_size(self, size):
+    def set_hidden_size(self, size: int):
         self.hidden_size = size
 
-    def forward(self, x, hidden, encoder_outputs):
+    def forward(
+        self, x: str, hidden: torch.Tensor, encoder_outputs: torch.Tensor
+    ):
         embedded = self.embedding(x).view(1, 1, -1)
         embedded = self.dropout(embedded)
 

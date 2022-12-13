@@ -5,6 +5,7 @@ import torch
 from torch import nn, optim
 
 from nlg_analysis.models.base_model import BaseModel
+from nlg_analysis.models.conversation_side import ConversationSide
 from nlg_analysis.models.seq2seq_decoder import Seq2SeqDecoder
 from nlg_analysis.models.seq2seq_encoder import Seq2SeqEncoder
 from nlg_analysis.models.seq2seq_utils import (
@@ -79,14 +80,14 @@ class Seq2SeqModel(BaseModel):
         learning_rate = 0.01
         hidden_size = 256
         n_iters = 75000
-        input_lang, output_lang, pairs = prepareData(
+        question_side, answer_side, pairs = prepareData(
             self.questions_path, self.answers_path
         )
-        encoder = Seq2SeqEncoder(input_lang.n_words, hidden_size, device).to(
-            device
-        )
+        encoder = Seq2SeqEncoder(
+            question_side.n_words, hidden_size, device
+        ).to(device)
         attn_decoder = Seq2SeqDecoder(
-            hidden_size, output_lang.n_words, device, dropout_p=0.1
+            hidden_size, answer_side.n_words, device, dropout_p=0.1
         ).to(device)
 
         encoder_optimizer = optim.SGD(encoder.parameters(), lr=learning_rate)
@@ -96,8 +97,8 @@ class Seq2SeqModel(BaseModel):
         training_pairs = [
             tensorsFromPair(
                 random.choice(pairs),
-                input_side=input_lang,
-                output_side=output_lang,
+                input_side=question_side,
+                output_side=answer_side,
                 eos_token=self.eos_token,
                 device=device,
             )
@@ -126,14 +127,14 @@ class Seq2SeqModel(BaseModel):
 
     def trainIter(
         self,
-        input_tensor,
-        target_tensor,
-        encoder,
-        decoder,
-        encoder_optimizer,
-        decoder_optimizer,
-        criterion,
-        device,
+        input_tensor: torch.Tensor,
+        target_tensor: torch.Tensor,
+        encoder: Seq2SeqEncoder,
+        decoder: Seq2SeqDecoder,
+        encoder_optimizer: torch.optim.Optimizer,
+        decoder_optimizer: torch.optim.Optimizer,
+        criterion: nn.Module,
+        device: torch.device,
         max_length=32,
         teacher_forcing_ratio=0.5,
     ):
@@ -199,12 +200,12 @@ class Seq2SeqModel(BaseModel):
 
     def evaluate(
         self,
-        encoder,
-        decoder,
-        sentence,
-        question_side,
-        answer_side,
-        device,
+        encoder: Seq2SeqEncoder,
+        decoder: Seq2SeqDecoder,
+        sentence: str,
+        question_side: ConversationSide,
+        answer_side: ConversationSide,
+        device: torch.device,
         max_length=32,
     ):
         with torch.no_grad():

@@ -3,7 +3,7 @@ class ConversationSide:
         self.word2index = {}
         self.word2count = {}
         self.index2word = {0: "SOS", 1: "EOS"}
-        self.n_words = 2  # Count SOS and EOS
+        self.n_words = 2
 
     def addSentence(self, sentence: str):
         for word in sentence.split(" "):
