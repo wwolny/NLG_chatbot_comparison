@@ -64,7 +64,7 @@ def tensorFromSentence(
 
 
 def tensorsFromPair(
-    pair: List,
+    pair: Tuple[str, str],
     input_side: ConversationSide,
     output_side: ConversationSide,
     eos_token: int,
