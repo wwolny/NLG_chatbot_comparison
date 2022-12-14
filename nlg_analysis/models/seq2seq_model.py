@@ -4,6 +4,7 @@ from typing import List, Tuple
 import torch
 from torch import nn, optim
 
+from nlg_analysis.cfg import TrainConfig
 from nlg_analysis.models.base_model import BaseModel
 from nlg_analysis.models.conversation_side import ConversationSide
 from nlg_analysis.models.seq2seq_decoder import Seq2SeqDecoder
@@ -75,11 +76,12 @@ class Seq2SeqModel(BaseModel):
         self,
         encoder_output_path: str,
         decoder_output_path: str,
+        train_config: TrainConfig,
     ) -> None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        learning_rate = 0.01
-        hidden_size = 256
-        n_iters = 75000
+        learning_rate = train_config.learning_rate
+        hidden_size = train_config.hidden_size
+        n_iters = train_config.n_iters
         question_side, answer_side, pairs = prepareData(
             self.questions_path, self.answers_path
         )
@@ -120,6 +122,7 @@ class Seq2SeqModel(BaseModel):
                 decoder_optimizer,
                 criterion,
                 device,
+                teacher_forcing_ratio=train_config.teacher_forcing_ratio,
             )
 
         torch.save(encoder.state_dict(), encoder_output_path)

@@ -47,3 +47,9 @@ class TrainConfig(BaseConfig):
     seq_length: int = 100
     buffer_size = 64
     batch_size = 10000
+
+    # Seq2Seq parameters
+    learning_rate: float = 0.01
+    hidden_size: int = 256
+    n_iters: int = 75000
+    teacher_forcing_ratio: float = 0.5
