@@ -135,8 +135,8 @@ class Seq2SeqModel(BaseModel):
         decoder_optimizer: torch.optim.Optimizer,
         criterion: nn.Module,
         device: torch.device,
-        max_length=32,
-        teacher_forcing_ratio=0.5,
+        max_length: int = 32,
+        teacher_forcing_ratio: float = 0.5,
     ) -> float:
         encoder_hidden = encoder.initHidden()
 
@@ -206,7 +206,7 @@ class Seq2SeqModel(BaseModel):
         question_side: ConversationSide,
         answer_side: ConversationSide,
         device: torch.device,
-        max_length=32,
+        max_length: int = 32,
     ) -> Tuple[List[str], torch.Tensor]:
         with torch.no_grad():
             input_tensor = tensorFromSentence(
