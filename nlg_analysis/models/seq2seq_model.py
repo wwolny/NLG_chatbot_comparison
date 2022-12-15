@@ -17,6 +17,8 @@ from nlg_analysis.models.seq2seq_utils import (
 
 
 class Seq2SeqModel(BaseModel):
+    """Model based on encoder decoder architecture."""
+
     def __init__(
         self,
         questions_path: str,
@@ -39,6 +41,7 @@ class Seq2SeqModel(BaseModel):
             self.path2decoder = None
 
     def generate_transcript(self, questions: List) -> str:
+        """Generate conversation transcript."""
         if self.path2decoder is None and self.path2encoder is None:
             raise ValueError
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -70,6 +73,7 @@ class Seq2SeqModel(BaseModel):
 
     @staticmethod
     def approach() -> str:
+        """Return the name of implemented approach."""
         return "Seq2Seq"
 
     def train(
@@ -78,6 +82,7 @@ class Seq2SeqModel(BaseModel):
         decoder_output_path: str,
         train_config: TrainConfig,
     ) -> None:
+        """Train model and save to given output path."""
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         learning_rate = train_config.learning_rate
         hidden_size = train_config.hidden_size
@@ -141,6 +146,7 @@ class Seq2SeqModel(BaseModel):
         max_length: int = 32,
         teacher_forcing_ratio: float = 0.5,
     ) -> float:
+        """Run one epoch."""
         encoder_hidden = encoder.initHidden()
 
         encoder_optimizer.zero_grad()
@@ -211,6 +217,7 @@ class Seq2SeqModel(BaseModel):
         device: torch.device,
         max_length: int = 32,
     ) -> Tuple[List[str], torch.Tensor]:
+        """Create text answer to given query."""
         with torch.no_grad():
             input_tensor = tensorFromSentence(
                 question_side,
